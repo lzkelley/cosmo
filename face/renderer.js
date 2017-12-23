@@ -1,4 +1,5 @@
-console.log("renderer.js")
+
+/* == Initialize Python Interface == */
 
 const zerorpc = require("zerorpc")
 let client = new zerorpc.Client(timeout=1000)
@@ -13,8 +14,7 @@ client.invoke("echo", "server ready", (error, res) => {
   }
 })
 
-// console.log("client = ", client);
-
+// Load DOM objects from document
 let redshift = document.querySelector('#redshiftInput')
 let lumDist = document.querySelector('#lumDistInput')
 let dialog = document.querySelector('#dialog')
@@ -63,7 +63,6 @@ function valueInput(e) {
     }
 }
 
-
-// Bind the function to the input forms
+// Bind the function to DOM input forms
 document.getElementById('redshiftForm').onkeypress = valueInput;
 document.getElementById('lumDistForm').onkeypress = valueInput;

@@ -1,11 +1,11 @@
 {
-  "name": "calc",
+  "name": "cosmo",
   "version": "0.1.0",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "",
+  "repository": "https://github.com/lzkelley/cosmo",
   "keywords": [],
   "author": "Luke Zoltan Kelley",
   "dependencies": {

@@ -1,5 +1,3 @@
-console.log("main.js")
-
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
@@ -8,17 +6,23 @@ const url = require('url')
 
 let pyProc = null;
 let pyPort = null;
+let pyPath = null;
 
 const selectPort = () => {
-    pyPort = 4242
-    return pyPort
+    pyPort = 4242;
+    return pyPort;
+}
+
+const pathPyAPI = () => {
+    pyPath = path.join(__dirname, 'face', 'pyapi.py');
+    return pyPath;
 }
 
 const createPyProc = () => {
     let port = '' + selectPort();
-    let script = path.join(__dirname, 'python', 'api.py');
-    console.log("script: '", script, "'")
-    pyProc = require('child_process').spawn('python', [script, port]);
+    let pyPath = '' + pathPyAPI();
+    console.log("pyPath: '", pyPath, "'", "on port", port)
+    pyProc = require('child_process').spawn('python', [pyPath, port]);
     if (pyProc != null) {
         console.log('child process success');
     }
@@ -74,6 +78,3 @@ app.on('ready', createWindow);
 app.on('window-all-closed', () => {
     app.quit()
 })
-
-
-console.log("end main.js")

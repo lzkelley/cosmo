@@ -1,4 +1,4 @@
-"""
+"""API from `cosmo` electron application to `cosmocalc` python package.
 """
 import datetime
 
@@ -16,6 +16,7 @@ cosmo = ap.cosmology.WMAP9
 
 
 class CalcApi:
+
     def __init__(self):
         out.write("CalcApi()\n")
 
@@ -64,17 +65,15 @@ def parse_port():
 def _log(msg):
     out.write(msg + "\n")
     print(msg)
-    out.flush()
     return
 
 
 def main():
-    out.write("api.main()\n")
+    _log("api.main()\n")
     addr = 'tcp://127.0.0.1:' + str(parse_port())
     s = zerorpc.Server(CalcApi())
     s.bind(addr)
-    # print('start running on {}'.format(addr))
-    out.write('start running on {}'.format(addr))
+    _log('start running on {}'.format(addr))
     s.run()
 
 
