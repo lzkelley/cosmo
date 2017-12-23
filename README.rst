@@ -10,6 +10,6 @@ Installation
     `npm install --python=python2.7` or
     `npm install --python=/usr/bin/python`
 
-- The build of `zeromq` might also have a conflict between Node and Electron (or something?), and may require rebuilding, e.g.
-  `npm rebuild zeromq --runtime=electron --target=1.7.2`
-  where `1.7.2` is the particular version of electron being used.
+  - The build of `zeromq` might also have a conflict between Node and Electron (or something?), and may require rebuilding, so this has been added to the npm 'postinstall':
+    `npm rebuild zeromq --runtime=electron --target=1.7.2`
+    where `1.7.2` is the particular version of electron being used.
