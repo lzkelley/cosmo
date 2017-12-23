@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>calc</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <!-- MathJax -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+    <!-- <script type="text/javascript" src="scripts/renderer.js"></script> -->
+
+  </head>
+
+  <body>
+    <h1>cosmo calc</h1>
+    <hr>
+
+    <form id="redshiftForm">
+      <span class="name">\(z = \)</span>
+      <input type="number" name="z" placeholder="redshift" min="0.0" id="redshiftInput">
+    </form>
+
+    <form id="lumDistForm">
+      <span class="name">\(d_L = \)</span>
+      <input name="dl" placeholder="lum dist" min="0.0" id="lumDistInput">
+    </form>
+
+    <br>
+    <div id="dialog" class='footer'></div>
+
+  </body>
+
+  <script>require('./scripts/renderer.js')</script>
+
+</html>

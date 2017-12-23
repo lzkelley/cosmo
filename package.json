@@ -1,0 +1,18 @@
+{
+  "name": "calc",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "",
+  "keywords": [],
+  "author": "Luke Zoltan Kelley",
+  "dependencies": {
+    "zerorpc": "git+https://github.com/fyears/zerorpc-node.git"
+  },
+  "devDependencies": {
+    "electron": "1.7.6",
+    "electron-packager": "^9.0.1"
+  }
+}

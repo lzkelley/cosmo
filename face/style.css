@@ -1,0 +1,49 @@
+/*    ====    BASICS    ====    */
+
+:root {
+  --width:800px;
+  --height: 600px;
+  --font-size: 20px;
+  --font-size-small: 12px;
+}
+
+* {
+    padding: 0px;
+	margin: 0px;
+}
+
+hr {
+    width: 50%;
+}
+
+body {
+	font-family: Times New Roman, serif;
+	font-size: var(--font-size);
+	color: rgb(200, 200, 200);
+	background-color: rgb(42, 42, 42);
+    padding: 10px;
+	margin: auto;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#dialog {
+    font-size: var(--font-size-small);
+	color: rgb(139, 139, 139);
+}
+
+form {
+    /* text-align: right; */
+    padding: 10px 0px;
+}
+
+span.name {
+    float: left;
+    width: 60px;
+    text-align: right;
+    padding: 0px 10px;
+}
