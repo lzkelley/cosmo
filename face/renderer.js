@@ -15,12 +15,12 @@ client.invoke("echo", "server ready", (error, res) => {
 })
 
 // Load DOM objects from document
-let redshift = document.querySelector('#redshiftInput')
-let lumDist = document.querySelector('#lumDistInput')
-let dialog = document.querySelector('#dialog')
+let redshift = document.querySelector('#redshiftInput');
+let lumDist = document.querySelector('#lumDistInput');
+let dialog = document.querySelector('#dialog');
 
 function valueInput(e) {
-    console.log("valueInput")
+    console.log("valueInput");
     // If `Enter` is pressed
     if (e.keyCode == 13) {
         // Get the element calling the action (this should be an `input`)
@@ -37,14 +37,16 @@ function valueInput(e) {
         let args = [srcName, value];
         console.log("renderer.valueInput: invoking with args = ", args)
         client.invoke("calc", args, (error, res) => {
-            let retval = res[0];
-            let message = res[1];
-            let msg = 'Python: ' + message
-            console.log("srcName = ", srcName);
             console.log("res:", res);
+            // let retval = res[0];
+            // let message = res[1];
+            let retval = res['dl'];
+            let message = res['msg'];
+            let msg = 'Python: ' + message;
+            console.log("srcName = ", srcName);
             if (error) {
-                console.log("Error!")
-                console.error(error)
+                console.log("Error!");
+                console.error(error);
             } else {
                 // result.textContent = res
                 if (srcName === 'z') {

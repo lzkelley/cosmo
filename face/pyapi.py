@@ -39,7 +39,7 @@ class CalcApi:
                 val = retval.value
                 uname = retval.unit.name
                 # Convert to str
-                retval = "{:.2f} {}".format(val, uname)
+                rv = "{:.2f} {}".format(val, uname)
 
             else:
                 raise ValueError("name = '{}' unimplemented".format(name))
@@ -50,7 +50,10 @@ class CalcApi:
             msg += "failed.  Error: '{}'".format(str(e))
 
         msg += ' After {}'.format(datetime.datetime.now() - beg)
-        return retval, msg
+        # return retval, msg
+        retval = {'dl': rv,
+                  'msg': msg}
+        return retval
 
     def echo(self, anything):
         """Test function for javascript interface.
