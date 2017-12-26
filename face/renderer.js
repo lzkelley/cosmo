@@ -16,8 +16,14 @@ client.invoke("echo", "server ready", (error, res) => {
 
 // Load DOM objects from document
 let redshift = document.querySelector('#redshiftInput');
+let scale = document.querySelector('#scaleInput');
+let comDist = document.querySelector('#comDistInput');
 let lumDist = document.querySelector('#lumDistInput');
+let lbkTime = document.querySelector('#lbkTimeInput');
+let ageTime = document.querySelector('#ageTimeInput');
+
 let dialog = document.querySelector('#dialog');
+
 
 function valueInput(e) {
     console.log("valueInput");
@@ -25,7 +31,6 @@ function valueInput(e) {
     if (e.keyCode == 13) {
         // Get the element calling the action (this should be an `input`)
         var srcElement = e.srcElement;
-        // console.log(srcElement);
 
         // Load quantities from element
         var srcName = srcElement.name;
@@ -37,10 +42,8 @@ function valueInput(e) {
         let args = [srcName, value];
         console.log("renderer.valueInput: invoking with args = ", args)
         client.invoke("calc", args, (error, res) => {
-            console.log("res:", res);
-            // let retval = res[0];
-            // let message = res[1];
-            let retval = res['dl'];
+            // console.log("res:", res);
+            let retval = res['dict'];
             let message = res['msg'];
             let msg = 'Python: ' + message;
             console.log("srcName = ", srcName);
@@ -48,16 +51,13 @@ function valueInput(e) {
                 console.log("Error!");
                 console.error(error);
             } else {
-                // result.textContent = res
-                if (srcName === 'z') {
-                    // console.log('Changing lumDist', lumDist)
-                    lumDist.value = retval;
-                    dialog.textContent = msg;
-                } else if (srcName === 'dl') {
-                    // console.log('Changing redshift', redshift)
-                    redshift.value = retval;
-                    dialog.textContent = msg;
-                }
+                redshift.value = retval['z'];
+                scale.value = retval['a'];
+                comDist.value = retval['dc'];
+                lumDist.value = retval['dl'];
+                lbkTime.value = retval['tl'];
+                ageTime.value = retval['ta'];
+                dialog.textContent = msg;
             }
         })
 
@@ -67,4 +67,8 @@ function valueInput(e) {
 
 // Bind the function to DOM input forms
 document.getElementById('redshiftForm').onkeypress = valueInput;
+document.getElementById('scaleForm').onkeypress = valueInput;
+document.getElementById('comDistForm').onkeypress = valueInput;
 document.getElementById('lumDistForm').onkeypress = valueInput;
+document.getElementById('lbkTimeForm').onkeypress = valueInput;
+document.getElementById('ageTimeForm').onkeypress = valueInput;
