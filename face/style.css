@@ -4,7 +4,8 @@
   --width:800px;
   --height: 600px;
   --font-size: 20px;
-  --font-size-small: 12px;
+  --font-size-small: 16px;
+  --font-size-tiny: 12px;
 }
 
 * {
@@ -32,13 +33,14 @@ body {
 }
 
 #dialog {
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-tiny);
 	color: rgb(139, 139, 139);
 }
 
 form {
     /* text-align: right; */
     padding: 10px 0px;
+    height: 30px;
 }
 
 span.name {
@@ -46,4 +48,15 @@ span.name {
     width: 60px;
     text-align: right;
     padding: 0px 10px;
+}
+
+span.desc {
+    width: 60px;
+    font-size: var(--font-size-small);
+    font-style: italic;
+    letter-spacing: 0.25px;
+    /* float: left; */
+    text-align: left;
+    padding: 0px 10px;
+    color: rgb(126, 110, 170);
 }
