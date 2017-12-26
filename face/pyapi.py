@@ -1,7 +1,9 @@
 """API from `cosmo` electron application to `cosmocalc` python package.
 """
 import datetime
+import os
 
+import numpy as np
 import zerorpc
 
 import cosmocalc
@@ -10,6 +12,12 @@ out = open('pylog.txt', 'w')
 out.write('api.py\n')
 
 cosmo = cosmocalc.get_cosmology()
+
+# Save the grid of cosmological values to a local file
+GRID_FNAME = "cosmo_grid.csv"
+grid, names = cosmo.get_grid()
+np.savetxt(GRID_FNAME, grid, delimiter=',', header=','.join(names))
+out.write("Saved to '{}' ({})".format(GRID_FNAME, os.path.exists(GRID_FNAME)))
 
 
 class CalcApi:
