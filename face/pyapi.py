@@ -14,9 +14,9 @@ out.write('api.py\n')
 cosmo = cosmocalc.get_cosmology()
 
 # Save the grid of cosmological values to a local file
-GRID_FNAME = "cosmo_grid.csv"
-grid, names = cosmo.get_grid()
-np.savetxt(GRID_FNAME, grid, delimiter=',', header=','.join(names))
+GRID_FNAME = "./data/cosmo_grid.csv"
+grid, names, units = cosmo.get_grid()
+np.savetxt(GRID_FNAME, grid, delimiter=',', header=','.join(names), comments='')
 out.write("Saved to '{}' ({})".format(GRID_FNAME, os.path.exists(GRID_FNAME)))
 
 
