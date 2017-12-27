@@ -21,37 +21,37 @@
       <form id="redshiftForm">
         <span class="name">\(z = \)</span>
         <input type="number" name="z" placeholder="redshift" min="0.0" id="redshiftInput">
-        <span class="desc">redshift</span>
+        <span class="desc" id="z">redshift</span>
       </form>
 
       <form id="scaleForm">
         <span class="name">\(a = \)</span>
         <input type="number" name="a" placeholder="scalefactor" min="0.0" id="scaleInput">
-        <span class="desc">scale factor</span>
+        <span class="desc" id="a">scale factor</span>
       </form>
 
       <form id="comDistForm">
         <span class="name">\(d_c = \)</span>
         <input name="dc" placeholder="com dist" min="0.0" id="comDistInput">
-        <span class="desc">dist: comoving</span>
+        <span class="desc" id="dc">dist: comoving</span>
       </form>
 
       <form id="lumDistForm">
         <span class="name">\(d_l = \)</span>
         <input name="dl" placeholder="lum dist" min="0.0" id="lumDistInput">
-        <span class="desc">dist: luminosity</span>
+        <span class="desc" id="dl">dist: luminosity</span>
       </form>
 
       <form id="lbkTimeForm">
         <span class="name">\(t_b = \)</span>
         <input name="tl" placeholder="lookback" min="0.0" id="lbkTimeInput">
-        <span class="desc">time: lookback</span>
+        <span class="desc" id="tl">time: lookback</span>
       </form>
 
       <form id="ageTimeForm">
         <span class="name">\(t = \)</span>
         <input name="ta" placeholder="age" min="0.0" id="ageTimeInput">
-        <span class="desc">time: age</span>
+        <span class="desc" id="ta">time: age</span>
       </form>
 
       <br>
@@ -59,7 +59,7 @@
     </div>
 
     <div class="right-side">
-      <svg id="simContainer" style="width: 600px; height: 400px; display: block; margin: auto;"></svg>
+      <svg id="simContainer" style="width: 550px; height: 400px; display: block; margin: auto;"></svg>
 
       <script type="text/javascript" src="face/plot.js"></script>
     </div>
