@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <title>calc</title>
     <link href="face/style.css" rel="stylesheet" type="text/css">
+    <link href="face/plot_style.css" rel="stylesheet" type="text/css">
     <!-- MathJax -->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+    <!-- D3 Library -->
+    <script type="text/javascript" src="face/library/d3.min.js"></script>
 
   </head>
 
@@ -13,48 +16,58 @@
     <h1>cosmo calc</h1>
     <hr>
 
-    <form id="redshiftForm">
-      <span class="name">\(z = \)</span>
-      <input type="number" name="z" placeholder="redshift" min="0.0" id="redshiftInput">
-      <span class="desc">redshift</span>
-    </form>
+    <div class="left-side">
 
-    <form id="scaleForm">
-      <span class="name">\(a = \)</span>
-      <input type="number" name="a" placeholder="scalefactor" min="0.0" id="scaleInput">
-      <span class="desc">scale factor</span>
-    </form>
+      <form id="redshiftForm">
+        <span class="name">\(z = \)</span>
+        <input type="number" name="z" placeholder="redshift" min="0.0" id="redshiftInput">
+        <span class="desc">redshift</span>
+      </form>
 
-    <form id="comDistForm">
-      <span class="name">\(d_c = \)</span>
-      <input name="dc" placeholder="com dist" min="0.0" id="comDistInput">
-      <span class="desc">dist: comoving</span>
-    </form>
+      <form id="scaleForm">
+        <span class="name">\(a = \)</span>
+        <input type="number" name="a" placeholder="scalefactor" min="0.0" id="scaleInput">
+        <span class="desc">scale factor</span>
+      </form>
 
-    <form id="lumDistForm">
-      <span class="name">\(d_l = \)</span>
-      <input name="dl" placeholder="lum dist" min="0.0" id="lumDistInput">
-      <span class="desc">dist: luminosity</span>
-    </form>
+      <form id="comDistForm">
+        <span class="name">\(d_c = \)</span>
+        <input name="dc" placeholder="com dist" min="0.0" id="comDistInput">
+        <span class="desc">dist: comoving</span>
+      </form>
 
-    <form id="lbkTimeForm">
-      <span class="name">\(t_b = \)</span>
-      <input name="tl" placeholder="lookback" min="0.0" id="lbkTimeInput">
-      <span class="desc">time: lookback</span>
-    </form>
+      <form id="lumDistForm">
+        <span class="name">\(d_l = \)</span>
+        <input name="dl" placeholder="lum dist" min="0.0" id="lumDistInput">
+        <span class="desc">dist: luminosity</span>
+      </form>
 
-    <form id="ageTimeForm">
-      <span class="name">\(t = \)</span>
-      <input name="ta" placeholder="age" min="0.0" id="ageTimeInput">
-      <span class="desc">time: age</span>
-    </form>
+      <form id="lbkTimeForm">
+        <span class="name">\(t_b = \)</span>
+        <input name="tl" placeholder="lookback" min="0.0" id="lbkTimeInput">
+        <span class="desc">time: lookback</span>
+      </form>
 
-    <br>
-    <div id="dialog" class='footer'></div>
+      <form id="ageTimeForm">
+        <span class="name">\(t = \)</span>
+        <input name="ta" placeholder="age" min="0.0" id="ageTimeInput">
+        <span class="desc">time: age</span>
+      </form>
+
+      <br>
+      <div id="dialog" class='footer'></div>
+    </div>
+
+    <div class="right-side">
+      <svg id="simContainer" style="width: 600px; height: 400px; display: block; margin: auto;"></svg>
+
+      <script type="text/javascript" src="face/plot.js"></script>
+    </div>
 
   </body>
 
   <!-- This might need to be after body... not sure why -->
   <script>require('./face/renderer.js')</script>
+
 
 </html>

@@ -1,7 +1,9 @@
 /*    ====    BASICS    ====    */
 
 :root {
-  --width:800px;
+  --left-width:400px;
+  --right-width:600px;
+  --width:calc(var(--left-width) + var(--right-width));
   --height: 600px;
   --font-size: 20px;
   --font-size-small: 16px;
@@ -25,6 +27,39 @@ body {
     padding: 10px;
 	margin: auto;
 }
+
+
+.left-side {
+    width: var(--left-width);
+	float: left;
+    padding: 40px 0;
+    overflow: hidden;
+}
+
+/*    ====    RIGHT PANEL    ====    */
+
+.right-side {
+    width: var(--right-width);
+	float: right;
+}
+/* .right-panel h1, h2, p {
+	line-height: 180%;
+}
+.right-panel h1 {
+    text-decoration: underline;
+}
+.right-panel h2, p {
+	margin-left: 20px;
+}
+.right-panel figure {
+    padding: 4px;
+    float: right;
+    width: 200px;
+}
+.right-panel img {
+    width: 100%;
+}
+ */
 
 .footer {
     position: fixed;
