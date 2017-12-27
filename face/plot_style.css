@@ -1,0 +1,35 @@
+
+svg text {
+    font-size:14px;
+}
+
+svg .axis {
+    stroke-width: 1px;
+    fill: none;
+}
+
+svg .axis line {
+    stroke: rgba(213, 71, 71, 0.8);
+}
+
+svg .axis path {
+    stroke: rgba(213, 71, 71, 0.8);
+}
+
+svg .axis text {
+  fill: red;
+}
+
+svg .line {
+    stroke-width: 2px;
+    fill: none;
+    stroke: rgb(46, 42, 241);
+}
+
+svg path.line#m1 {
+    stroke: rgba(170, 0, 0, 0.7);
+}
+
+svg path.line#m2 {
+    stroke: rgba(0, 0, 170, 0.7);
+}
