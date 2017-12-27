@@ -1,0 +1,23 @@
+:root {
+    --left-width:350px;
+    --right-width:550px;
+    --width:calc(var(--left-width) + var(--right-width));
+    --height: 500px;
+    --font-size: 20px;
+    --font-size-small: 16px;
+    --font-size-tiny: 12px;
+
+    --color-fg: rgb(200, 200, 200);
+    --color-bg: rgb(42, 42, 42);
+
+    /* --color-z: rgb(170, 150, 150); */
+    --color-z: var(--color-fg);
+    /* Distances */
+    --color-d: rgb(100, 100, 200);
+    --color-dc: rgb(80, 80, 220);
+    --color-dl: rgb(120, 120, 180);
+    /* Times */
+    --color-t: rgb(200, 100, 100);
+    --color-tl: rgb(220, 80, 80);
+    --color-ta: rgb(180, 120, 120);
+}

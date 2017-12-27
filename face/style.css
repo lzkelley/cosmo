@@ -1,14 +1,5 @@
 /*    ====    BASICS    ====    */
-
-:root {
-  --left-width:400px;
-  --right-width:600px;
-  --width:calc(var(--left-width) + var(--right-width));
-  --height: 600px;
-  --font-size: 20px;
-  --font-size-small: 16px;
-  --font-size-tiny: 12px;
-}
+@import './style_pars.css';
 
 * {
     padding: 0px;
@@ -22,8 +13,8 @@ hr {
 body {
 	font-family: Times New Roman, serif;
 	font-size: var(--font-size);
-	color: rgb(200, 200, 200);
-	background-color: rgb(42, 42, 42);
+	color: var(--color-fg);
+	background-color: var(--color-bg);
     padding: 10px;
 	margin: auto;
 }
@@ -42,24 +33,6 @@ body {
     width: var(--right-width);
 	float: right;
 }
-/* .right-panel h1, h2, p {
-	line-height: 180%;
-}
-.right-panel h1 {
-    text-decoration: underline;
-}
-.right-panel h2, p {
-	margin-left: 20px;
-}
-.right-panel figure {
-    padding: 4px;
-    float: right;
-    width: 200px;
-}
-.right-panel img {
-    width: 100%;
-}
- */
 
 .footer {
     position: fixed;
@@ -94,4 +67,28 @@ span.desc {
     text-align: left;
     padding: 0px 10px;
     color: rgb(126, 110, 170);
+}
+
+span.desc#z {
+    color: var(--color-z);
+}
+
+span.desc#a {
+    color: var(--color-z);
+}
+
+span.desc#dc {
+    color: var(--color-dc);
+}
+
+span.desc#dl {
+    color: var(--color-dl);
+}
+
+span.desc#tl {
+    color: var(--color-tl);
+}
+
+span.desc#ta {
+    color: var(--color-ta);
 }

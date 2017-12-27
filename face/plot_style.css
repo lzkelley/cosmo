@@ -1,3 +1,4 @@
+@import './style_pars.css';
 
 svg text {
     font-size:14px;
@@ -6,30 +7,73 @@ svg text {
 svg .axis {
     stroke-width: 1px;
     fill: none;
-}
-
-svg .axis line {
-    stroke: rgba(213, 71, 71, 0.8);
-}
-
-svg .axis path {
-    stroke: rgba(213, 71, 71, 0.8);
+    stroke-width: 0.5px;
 }
 
 svg .axis text {
-  fill: red;
+    stroke-width: 0.5px;
+}
+
+svg .axis#axis_z line, svg .axis#axis_z path, svg .axis#axis_z text {
+    stroke: var(--color-z);
+}
+
+svg .axis#axis_z text {
+    fill: var(--color-z);
+}
+
+svg .axis#axis_d line, svg .axis#axis_d path, svg .axis#axis_d text {
+    stroke: var(--color-d);
+}
+
+svg .axis#axis_d text {
+    fill: var(--color-d);
+}
+
+svg .axis#axis_t line, svg .axis#axis_t path, svg .axis#axis_t text {
+    stroke: var(--color-t);
+}
+
+svg .axis#axis_t text {
+    fill: var(--color-t);
 }
 
 svg .line {
-    stroke-width: 2px;
+    stroke-width: 2.5px;
     fill: none;
-    stroke: rgb(46, 42, 241);
+    stroke: red;
 }
 
-svg path.line#m1 {
-    stroke: rgba(170, 0, 0, 0.7);
+svg .line#dc {
+    stroke: var(--color-dc);
 }
 
-svg path.line#m2 {
-    stroke: rgba(0, 0, 170, 0.7);
+svg .line#dl {
+    stroke: var(--color-dl);
+}
+
+svg .line#tl {
+    stroke: var(--color-tl);
+}
+
+svg .line#ta {
+    stroke: var(--color-ta);
+}
+
+svg .grid line {
+  stroke-width: 1.0px;
+  stroke-opacity: 0.25;
+  shape-rendering: crispEdges;
+}
+
+svg .grid#z line {
+    stroke: var(--color-z);
+}
+
+svg .grid#d line {
+    stroke: var(--color-d);
+}
+
+svg .grid#t line {
+    stroke: var(--color-t);
 }
