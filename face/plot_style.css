@@ -1,42 +1,48 @@
 @import './style_pars.css';
 
 svg text {
-    font-size:14px;
+    font-size: var(--font-size-small);
+    font: "Times New Roman";
+    stroke-width: var(--text-stroke-width);
+    font-weight: 100;
+    stroke: var(--color-fg);
+    fill: var(--color-fg);
 }
+
+/*  ====  Plot Axes Parameters  ====  */
 
 svg .axis {
-    stroke-width: 1px;
     fill: none;
-    stroke-width: 0.5px;
 }
 
-svg .axis text {
-    stroke-width: 0.5px;
-}
-
-svg .axis#axis_z line, svg .axis#axis_z path, svg .axis#axis_z text {
+svg #axis_z * {
     stroke: var(--color-z);
 }
 
-svg .axis#axis_z text {
+svg #axis_z text, svg text#axis_z {
     fill: var(--color-z);
+    stroke: var(--color-z);
 }
 
-svg .axis#axis_d line, svg .axis#axis_d path, svg .axis#axis_d text {
+svg #axis_d * {
     stroke: var(--color-d);
 }
 
-svg .axis#axis_d text {
+svg #axis_d text, svg text#axis_d {
     fill: var(--color-d);
+    stroke: var(--color-d);
 }
 
-svg .axis#axis_t line, svg .axis#axis_t path, svg .axis#axis_t text {
+svg #axis_t * {
     stroke: var(--color-t);
 }
 
-svg .axis#axis_t text {
+svg #axis_t text, svg text#axis_t {
     fill: var(--color-t);
+    stroke: var(--color-t);
 }
+
+/*  ====  Plot Text/Lines Parameters  ====  */
 
 svg .line {
     stroke-width: 2.5px;
@@ -46,6 +52,26 @@ svg .line {
 
 svg .line#dc {
     stroke: var(--color-dc);
+}
+
+svg text#dc {
+    stroke: var(--color-dc);
+    fill: var(--color-dc);
+}
+
+svg text#dl {
+    stroke: var(--color-dl);
+    fill: var(--color-dl);
+}
+
+svg text#ta {
+    stroke: var(--color-ta);
+    fill: var(--color-ta);
+}
+
+svg text#tl {
+    stroke: var(--color-tl);
+    fill: var(--color-tl);
 }
 
 svg .line#dl {
@@ -60,9 +86,11 @@ svg .line#ta {
     stroke: var(--color-ta);
 }
 
+/*  ====  Axes Grid Line Parameters  ====  */
+
 svg .grid line {
   stroke-width: 1.0px;
-  stroke-opacity: 0.25;
+  stroke-opacity: 0.35;
   shape-rendering: crispEdges;
 }
 
@@ -76,4 +104,8 @@ svg .grid#d line {
 
 svg .grid#t line {
     stroke: var(--color-t);
+}
+
+svg .axis tspan {
+  font-size: var(--font-size-sup);
 }
