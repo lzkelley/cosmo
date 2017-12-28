@@ -10,6 +10,7 @@
   "keywords": [],
   "author": "Luke Zoltan Kelley",
   "dependencies": {
+    "sprintf-js": "^1.1.1",
     "zerorpc": "git+https://github.com/fyears/zerorpc-node.git"
   },
   "devDependencies": {
