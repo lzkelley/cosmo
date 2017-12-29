@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, shell} = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -53,6 +53,7 @@ function createWindow () {
         show: false,   // dont show until ready (below)
     });
 
+    win.setResizable(false);
     // win.webContents.openDevTools();
 
     // and load the index.html of the app.
@@ -70,6 +71,19 @@ function createWindow () {
     win.on('closed', () => {
         win = null
     })
+
+    // Load all external links in default browser
+    win.webContents.on('will-navigate', function(e, reqUrl) {
+        let getHost = url=>require('url').parse(url).host;
+        let reqHost = getHost(reqUrl);
+        let isExternal = reqHost && reqHost != getHost(win.webContents.getURL());
+        console.log("host = ", getHost, reqHost);
+        console.log(isExternal);
+        if (isExternal) {
+            e.preventDefault();
+            shell.openExternal(reqUrl);
+        }
+    });
 }
 
 app.on('ready', createWindow);

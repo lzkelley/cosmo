@@ -6,6 +6,16 @@
 	margin: 0px;
 }
 
+a {
+    text-decoration: none;
+    color: var(--color-fg);
+}
+
+a:hover {
+    color: red;
+    position: relative;
+}
+
 hr {
     width: 30%;
 }
@@ -18,7 +28,6 @@ body {
     padding: 10px;
 	margin: auto;
 }
-
 
 .left-side {
     width: var(--left-width);
@@ -35,14 +44,31 @@ body {
 }
 
 .footer {
-    position: fixed;
+    position: relative;
     bottom: 0;
     width: 100%;
+    line-height: 180%;
+    font-size: var(--font-size-tiny);
+	color: rgb(139, 139, 139);
+}
+
+.short {
+    line-height: 120%;
 }
 
 #dialog {
+    /* float: left;
+    text-align: left; */
     font-size: var(--font-size-tiny);
 	color: rgb(139, 139, 139);
+}
+
+#references {
+    /* float: left; */
+    /* text-align: right; */
+    font-size: var(--font-size-tiny);
+	color: rgb(139, 139, 139);
+    /* padding: 4px 20px; */
 }
 
 form {
