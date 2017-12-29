@@ -22,7 +22,7 @@ width = parseFloat(width.replace("px", ""));
 height = parseFloat(height.replace("px", ""));
 font_size = parseFloat(font_size.replace("px", ""));
 
-var margin = {top: 20, right: 84, bottom: 50, left: 84};
+var margin = {top: 40, right: 84, bottom: 50, left: 84};
 margin.width = margin.left + margin.right;
 margin.height = margin.top + margin.bottom;
 
@@ -78,12 +78,13 @@ function initPlots() {
     axis_z = d3.axisBottom();
     axis_d = d3.axisLeft().ticks(5);
     axis_t = d3.axisRight().ticks(5);
+    axis_a = d3.axisTop();
 
-    scale_x = d3.scaleLog();
+    scale_z = d3.scaleLog();
     scale_d = d3.scaleLog();
     scale_t = d3.scaleLog();
 
-    scale_x = scale_x.domain(Z_RANGE)
+    scale_z = scale_z.domain(Z_RANGE)
         .range([0.0, width - margin.width]);
     scale_d = scale_d.domain(D_RANGE)
         .range([height - margin.height, 0]);
@@ -95,7 +96,7 @@ function initPlots() {
         .attr("class", "grid")
         .attr("id", "z")
         .attr("transform", "translate(" + margin.left + "," + (height - margin.bottom) + ")")
-        .call(d3.axisBottom(scale_x)
+        .call(d3.axisBottom(scale_z)
             .ticks(NZ_GRID)
             .tickSize(-height)
             .tickFormat("")
@@ -123,9 +124,23 @@ function initPlots() {
             .tickFormat("")
         );
 
-    axis_z.scale(scale_x);
+    axis_z.scale(scale_z);
+    axis_a.scale(scale_z);
     axis_d.scale(scale_d);
     axis_t.scale(scale_t);
+
+    // Choose scale-factor tick locations
+    var a_ticks = [0.99, 0.95, 0.9, 0.8, 0.5, 0.2];
+    // Convert to redshift values
+    var a_ticks_z = [];
+    for (var ii = 0, len = a_ticks.length; ii < len; ii++) {
+        a_ticks_z.push((1.0/a_ticks[ii]) - 1.0);
+    }
+    // Set tick locations in redshift-scale, but label according to scale-factor
+    axis_a.tickValues(a_ticks_z)
+        .tickFormat(function(d) {
+            return sprintf('%.2f', 1.0/(d + 1.0));
+        });
 
     // d axis
     var _ax_d = svg.append("g")
@@ -141,11 +156,19 @@ function initPlots() {
         .attr("transform", "translate(" + (width - margin.right) + "," + margin.top + ")")
         .call(axis_t);
 
+    // z axis
     var _ax_z = svg.append("g")
         .attr("class", "axis")
         .attr("id", "axis_z")
         .attr("transform", "translate(" + margin.left + "," + xAxisTranslate + ")")
         .call(axis_z);
+
+    // a axis
+    var _ax_a = svg.append("g")
+        .attr("class", "axis")
+        .attr("id", "axis_z")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(axis_a);
 
     axisLabelTens(_ax_z);
     axisLabelTens(_ax_t);
@@ -161,6 +184,15 @@ function initPlots() {
         .style("text-anchor", "middle")
         .style("font-size", font_size*1.2)
         .text("Redshift");
+
+    // == Scalefactor Axis
+    svg.append("text")
+        .attr("id", "axis_z")
+        .attr("transform",
+            "translate(" + (width/2) + ", " + 14 + ")")
+        .style("text-anchor", "middle")
+        .style("font-size", font_size*1.2)
+        .text("Scale Factor");
 
     // == Distance Axis
     svg.append("text")
@@ -259,7 +291,7 @@ function plotLines() {
         // ==  Comoving Distance d_C  ==
         // define the line
         var line_dc = d3.line()
-            .x(function(d) { return scale_x(d.z); })
+            .x(function(d) { return scale_z(d.z); })
             .y(function(d) { return scale_d(d.dc); });
 
         // Add the valueline path.
@@ -273,7 +305,7 @@ function plotLines() {
         // ==  Luminosity Distance d_L  ==
         // define the line
         var line_dl = d3.line()
-            .x(function(d) { return scale_x(d.z); })
+            .x(function(d) { return scale_z(d.z); })
             .y(function(d) { return scale_d(d.dl); });
 
         // Add the valueline path.
@@ -287,7 +319,7 @@ function plotLines() {
         // ==  Lookback Time t_l  ==
         // define the line
         var line_tl = d3.line()
-            .x(function(d) { return scale_x(d.z); })
+            .x(function(d) { return scale_z(d.z); })
             .y(function(d) { return scale_t(d.tl); });
 
         // Add the valueline path.
@@ -301,7 +333,7 @@ function plotLines() {
         // ==  Universe-Age Time t_a  ==
         // define the line
         var line_ta = d3.line()
-            .x(function(d) { return scale_x(d.z); })
+            .x(function(d) { return scale_z(d.z); })
             .y(function(d) { return scale_t(d.ta); });
 
         // Add the valueline path.
