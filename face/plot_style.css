@@ -1,8 +1,8 @@
 @import './style_pars.css';
 
 svg text {
+    font-family: Baskerville, Computer Modern, Times New Roman, serif;
     font-size: var(--font-size-small);
-    font: "Times New Roman";
     stroke-width: var(--text-stroke-width);
     font-weight: 100;
     stroke: var(--color-fg);
@@ -50,7 +50,7 @@ svg .line {
     stroke: red;
 }
 
-svg .line#dc {
+svg .line#line_dc {
     stroke: var(--color-dc);
 }
 
@@ -74,15 +74,15 @@ svg text#tl {
     fill: var(--color-tl);
 }
 
-svg .line#dl {
+svg .line#line_dl {
     stroke: var(--color-dl);
 }
 
-svg .line#tl {
+svg .line#line_tl {
     stroke: var(--color-tl);
 }
 
-svg .line#ta {
+svg .line#line_ta {
     stroke: var(--color-ta);
 }
 
@@ -108,4 +108,37 @@ svg .grid#t line {
 
 svg .axis tspan {
   font-size: var(--font-size-sup);
+}
+
+
+.overlay {
+    fill: rgba(100, 100, 100, 0.2);
+    stroke: none;
+    pointer-events: all;
+}
+.focusLine {
+    fill: none;
+    stroke-width: 1.0px;
+    stroke-dasharray: 3, 3;
+    /* opacity: 0.75; */
+}
+
+#focusLine_z {
+    stroke: var(--color-z);
+}
+
+#focusLine_dl {
+    stroke: var(--color-dl);
+}
+
+#focusLine_dc {
+    stroke: var(--color-dc);
+}
+
+#focusLine_tl {
+    stroke: var(--color-tl);
+}
+
+#focusLine_ta {
+    stroke: var(--color-ta);
 }

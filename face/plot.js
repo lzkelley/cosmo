@@ -8,6 +8,10 @@
 var sprintf = require('sprintf-js').sprintf
 
 var svg = d3.select('#simContainer');
+var data, data_z, data_dl, data_len;
+var path_dc, path_dl, path_tl, path_ta;
+var line_dc, line_dl, line_tl, line_ta;
+var focus;
 
 var style = getComputedStyle(document.body);
 var color_dc = style.getPropertyValue('--color-dc');
@@ -23,6 +27,7 @@ height = parseFloat(height.replace("px", ""));
 font_size = parseFloat(font_size.replace("px", ""));
 
 var margin = {top: 40, right: 84, bottom: 50, left: 84};
+// var margin = {top: 40, right: 84, bottom: 50, left: -84};
 margin.width = margin.left + margin.right;
 margin.height = margin.top + margin.bottom;
 
@@ -33,7 +38,7 @@ margin.height = margin.top + margin.bottom;
 //     .attr("height", height)
 //     .attr("fill", "rgba(215, 170, 246, 0.1)");
 
-var Z_RANGE = [0.01, 10.0];   // Range of redshift values
+var Z_RANGE = [0.01, 100.0];   // Range of redshift values
 var D_RANGE = [1.0e+1, 1.0e5];  // Range of distance [Mpc] values
 var T_RANGE = [1.0e-1, 20.0];  // Range of time [Gyr] values
 
@@ -58,13 +63,7 @@ function initPlots() {
 
     var xAxisTranslate = height - margin.bottom;
 
-    // Create a `g` called `plots` which we be clipped outside of the `mask`
-    //    This is where all plotted lines should go, using:
-    //    ``svg.select("#plots").append("path") ....``
-    svg.append("g")
-        .attr("id", "plots")
-        .attr("clip-path", "url(#mask)");
-
+    // Construct mask/overlay to monitor mouse over plot; and clip lines outside plot areas
     var mask = defs.append("clipPath")
         .attr("id", "mask")
         .style("pointer-events", "none")
@@ -72,7 +71,14 @@ function initPlots() {
         .attr('x', margin.left)
         .attr('y', margin.top)
         .attr('width', width - margin.width)
-        .attr('height', height - margin.height);
+        .attr('height', height - margin.height)
+
+    // Create a `g` called `plots` which we be clipped outside of the `mask`
+    //    This is where all plotted lines should go, using:
+    //    ``svg.select("#plots").append("path") ....``
+    svg.append("g")
+        .attr("id", "plots")
+        .attr("clip-path", "url(#mask)");
 
     // == Scales and Axes == //
     axis_z = d3.axisBottom();
@@ -255,6 +261,82 @@ function initPlots() {
     temp.attr("dx", temp.node().getBBox().width/2 + 10)
         .attr("dy", temp.node().getBBox().height + 4)
 
+    //  ====    Add Mouse-Interaction with Plot    ====  //
+
+    focus = svg.select("#plots").append('g')
+        // .style('display', 'none');
+
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_z');
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_dl');
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_dc');
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_tl');
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_ta');
+
+    var bisectDate = d3.bisector(function(d) { return d[0]; }).left;
+
+    svg.append('rect')
+        .attr('class', 'overlay')
+        .attr('x', margin.left)
+        .attr('y', margin.top)
+        .attr('width', width - margin.width)
+        .attr('height', height - margin.height)
+        .on('click', function() {
+            var mouse = d3.mouse(this);
+            var zz = scale_z.invert(mouse[0] - margin.left);
+            // console.log("mouse = ", mouse, "zz = ", zz);
+            calcAndUpdate(zz);
+        });
+}
+
+function updateCrossHairs(retval) {
+    console.log("plot.updateCrossHairs() : ", retval);
+    var temp = parseFloat(retval['z']);
+    xx = scale_z(temp) + margin.left;
+    console.log("temp = ", temp, "xx = ", xx);
+    focus.select('#focusLine_z')
+        .attr('x1', xx).attr('y1', 0)
+        .attr('x2', xx).attr('y2', height);
+
+    temp = parseFloat(retval['dl'].replace(" Mpc", ""));
+    yy = scale_d(temp) + margin.top;
+    console.log("temp = ", temp, "yy = ", yy);
+    focus.select('#focusLine_dl')
+        .attr('x1', 0).attr('y1', yy)
+        .attr('x2', width).attr('y2', yy);
+
+    temp = parseFloat(retval['dc'].replace(" Mpc", ""));
+    yy = scale_d(temp) + margin.top;
+    console.log("temp = ", temp, "yy = ", yy);
+    focus.select('#focusLine_dc')
+        .attr('x1', 0).attr('y1', yy)
+        .attr('x2', width).attr('y2', yy);
+
+    temp = parseFloat(retval['tl'].replace(" Gyr", ""));
+    console.log("tl = ", temp);
+    yy = scale_t(temp) + margin.top;
+    console.log("temp = ", temp, "yy = ", yy);
+    focus.select('#focusLine_tl')
+        .attr('x1', 0).attr('y1', yy)
+        .attr('x2', width).attr('y2', yy);
+
+    temp = parseFloat(retval['ta'].replace(" Gyr", ""));
+    console.log("ta = ", temp);
+    yy = scale_t(temp) + margin.top;
+    console.log("temp = ", temp, "yy = ", yy);
+    focus.select('#focusLine_ta')
+        .attr('x1', 0).attr('y1', yy)
+        .attr('x2', width).attr('y2', yy);
+
 }
 
 function axisLabelTens(ax) {
@@ -273,10 +355,58 @@ function powerOfTen(d) {
   return d / Math.pow(10, Math.ceil(Math.log(d) / Math.LN10 - 1e-12)) === 1;
 }
 
-function plotLines() {
-    d3.csv("data/cosmo_grid.csv", function(error, data) {
-        if (error) throw error;
+function findYatX(x, xv, yv, error) {
+    var end = xv.length,
+        beg = 0,
+        count_max = 50,
+        count = 0,
+        mid, xl, xh;
 
+    console.log("x = ", x);
+
+    do  {
+        // get the middle point
+        mid = Math.floor((end + beg) / 2);
+        xl = xv[mid];
+        xh = xv[mid+1];
+
+        console.log(beg, mid, end, " :: ", xl, x);
+
+        if (xl < x) {
+            beg = mid;
+        } else if (xh > x) {
+            end = mid + 1;
+        }
+
+        // Increase iteration
+        if (count_max < ++ count)
+            break;
+    } while (end > beg + 1);
+
+    xl = xv[beg], xh = xv[end];
+    var yl = yv[beg], yh = yv[end];
+    console.log("x = ", xl, xh);
+    console.log("y = ", yl, yh);
+    var interp = yl + (x - xl) * (yh - yl) / (xh - xl);
+    console.log("interp = ", interp);
+    return interp;
+
+    return mid;
+}
+
+function plotLines() {
+    d3.csv("data/cosmo_grid.csv", function(error, _data) {
+        if (error) throw error;
+        data = _data;
+        data_z = [];
+        data_dl = [];
+        data_len = data.length;
+        for (var ii = 0; ii < data_len; ii++) {
+            data_z.push(parseFloat(data[data_len - 1 - ii].z));
+            data_dl.push(parseFloat(data[data_len - 1 - ii].dl));
+        }
+
+        var transLoc = "translate(" + (margin.left) + "," + (margin.top) + ")";
         data.splice(-1, 1);
 
         // format the data
@@ -290,59 +420,59 @@ function plotLines() {
 
         // ==  Comoving Distance d_C  ==
         // define the line
-        var line_dc = d3.line()
+        line_dc = d3.line()
             .x(function(d) { return scale_z(d.z); })
             .y(function(d) { return scale_d(d.dc); });
 
         // Add the valueline path.
-        svg.select("#plots").append("path")
+        path_dc = svg.select("#plots").append("path")
             .data([data])
             .attr("class", "line")
-            .attr("id", "dc")
+            .attr("id", "line_dc")
             .attr("d", line_dc)
-            .attr("transform", "translate(50, 50)");
+            .attr("transform", transLoc);
 
         // ==  Luminosity Distance d_L  ==
         // define the line
-        var line_dl = d3.line()
+        line_dl = d3.line()
             .x(function(d) { return scale_z(d.z); })
             .y(function(d) { return scale_d(d.dl); });
 
         // Add the valueline path.
-        svg.select("#plots").append("path")
+        path_dl = svg.select("#plots").append("path")
             .data([data])
             .attr("class", "line")
-            .attr("id", "dl")
+            .attr("id", "line_dl")
             .attr("d", line_dl)
-            .attr("transform", "translate(50, 50)");
+            .attr("transform", transLoc);
 
         // ==  Lookback Time t_l  ==
         // define the line
-        var line_tl = d3.line()
+        line_tl = d3.line()
             .x(function(d) { return scale_z(d.z); })
             .y(function(d) { return scale_t(d.tl); });
 
         // Add the valueline path.
-        svg.select("#plots").append("path")
+        path_tl = svg.select("#plots").append("path")
             .data([data])
             .attr("class", "line")
-            .attr("id", "tl")
+            .attr("id", "line_tl")
             .attr("d", line_tl)
-            .attr("transform", "translate(50, 50)");
+            .attr("transform", transLoc);
 
         // ==  Universe-Age Time t_a  ==
         // define the line
-        var line_ta = d3.line()
+        line_ta = d3.line()
             .x(function(d) { return scale_z(d.z); })
             .y(function(d) { return scale_t(d.ta); });
 
         // Add the valueline path.
-        svg.select("#plots").append("path")
+        path_ta = svg.select("#plots").append("path")
             .data([data])
             .attr("class", "line")
-            .attr("id", "ta")
+            .attr("id", "line_ta")
             .attr("d", line_ta)
-            .attr("transform", "translate(50, 50)");
+            .attr("transform", transLoc);
 
     });
 }

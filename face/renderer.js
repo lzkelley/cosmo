@@ -30,39 +30,49 @@ function valueInput(e) {
     // If `Enter` is pressed
     if (e.keyCode == 13) {
         // Get the element calling the action (this should be an `input`)
-        var srcElement = e.srcElement;
+        let srcElement = e.srcElement;
 
         // Load quantities from element
-        var srcName = srcElement.name;
-        var srcId = srcElement.id;
-        var value = srcElement.value;
+        let srcName = srcElement.name;
+        let srcId = srcElement.id;
+        let value = srcElement.value;
         console.log(srcName, srcId, value);
         console.log("client = ", client);
 
-        let args = [srcName, value];
-        console.log("renderer.valueInput: invoking with args = ", args)
-        client.invoke("calc", args, (error, res) => {
-            // console.log("res:", res);
-            let retval = res['dict'];
-            let message = res['msg'];
-            let msg = 'Python: ' + message;
-            console.log("srcName = ", srcName);
-            if (error) {
-                console.log("Error!");
-                console.error(error);
-            } else {
-                redshift.value = retval['z'];
-                scale.value = retval['a'];
-                comDist.value = retval['dc'];
-                lumDist.value = retval['dl'];
-                lbkTime.value = retval['tl'];
-                ageTime.value = retval['ta'];
-                dialog.textContent = msg;
-            }
-        })
-
+        let retval = calcAndUpdate(value, srcName);
+        updateCrossHairs(retval);
         return false;
     }
+}
+
+function calcAndUpdate(value, src="z") {
+    var retval;
+    let args = [src, value];
+    console.log("renderer.calcAndUpdate: invoking with args = ", args);
+    client.invoke("calc", args, (error, res) => {
+        // console.log("res:", res);
+        retval = res['dict'];
+        let message = res['msg'];
+        let msg = 'Python: ' + message;
+        console.log("srcName = ", src);
+        if (error) {
+            console.log("Error!");
+            console.error(error);
+        } else {
+            updateValues(retval, msg);
+            updateCrossHairs(retval);
+        }
+    });
+}
+
+function updateValues(retval, msg) {
+    redshift.value = retval['z'];
+    scale.value = retval['a'];
+    comDist.value = retval['dc'];
+    lumDist.value = retval['dl'];
+    lbkTime.value = retval['tl'];
+    ageTime.value = retval['ta'];
+    dialog.textContent = msg;
 }
 
 // Bind the function to DOM input forms
