@@ -50,7 +50,6 @@ function calcAndUpdate(value, src="z") {
     let args = [src, value];
     console.log("renderer.calcAndUpdate: invoking with args = ", args);
     client.invoke("calc", args, (error, res) => {
-        // console.log("res:", res);
         retval = res['dict'];
         let message = res['msg'];
         let msg = 'Python: ' + message;
@@ -66,6 +65,7 @@ function calcAndUpdate(value, src="z") {
 }
 
 function updateValues(retval, msg) {
+    console.log("renderer.updateValues()");
     redshift.value = retval['z'];
     scale.value = retval['a'];
     comDist.value = retval['dc'];

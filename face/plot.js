@@ -103,8 +103,6 @@ function initPlot() {
         a_ticks_z.push((1.0/A_TICKS[ii]) - 1.0);
     }
     // Set tick locations in redshift-scale, but label according to scale-factor
-    console.log(A_TICKS);
-    console.log(a_ticks_z);
     axis_a.tickValues(a_ticks_z)
         .tickFormat(function(d) {
             return sprintf('%.2f', 1.0/(d + 1.0));
@@ -324,37 +322,30 @@ function updateCrossHairs(retval) {
     console.log("plot.updateCrossHairs() : ", retval);
     var temp = parseFloat(retval['z']);
     xx = scale_z(temp) + margin.left;
-    console.log("temp = ", temp, "xx = ", xx);
     focus.select('#focusLine_z')
         .attr('x1', xx).attr('y1', 0)
         .attr('x2', xx).attr('y2', height);
 
     temp = parseFloat(retval['dl'].replace(" Mpc", ""));
     yy = scale_d(temp) + margin.top;
-    console.log("temp = ", temp, "yy = ", yy);
     focus.select('#focusLine_dl')
         .attr('x1', 0).attr('y1', yy)
         .attr('x2', width).attr('y2', yy);
 
     temp = parseFloat(retval['dc'].replace(" Mpc", ""));
     yy = scale_d(temp) + margin.top;
-    console.log("temp = ", temp, "yy = ", yy);
     focus.select('#focusLine_dc')
         .attr('x1', 0).attr('y1', yy)
         .attr('x2', width).attr('y2', yy);
 
     temp = parseFloat(retval['tl'].replace(" Gyr", ""));
-    console.log("tl = ", temp);
     yy = scale_t(temp) + margin.top;
-    console.log("temp = ", temp, "yy = ", yy);
     focus.select('#focusLine_tl')
         .attr('x1', 0).attr('y1', yy)
         .attr('x2', width).attr('y2', yy);
 
     temp = parseFloat(retval['ta'].replace(" Gyr", ""));
-    console.log("ta = ", temp);
     yy = scale_t(temp) + margin.top;
-    console.log("temp = ", temp, "yy = ", yy);
     focus.select('#focusLine_ta')
         .attr('x1', 0).attr('y1', yy)
         .attr('x2', width).attr('y2', yy);
@@ -497,4 +488,3 @@ async function tryPlot() {
 
 initPlot();
 tryPlot();
-// loadAndPlotCosmoLines();
