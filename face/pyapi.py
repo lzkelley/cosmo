@@ -9,7 +9,7 @@ import zerorpc
 import cosmocalc
 
 out = open('pylog.txt', 'w')
-out.write('api.py\n')
+out.write('api.py - {}\n'.format(datetime.datetime.now()))
 
 cosmo = cosmocalc.get_cosmology()
 
