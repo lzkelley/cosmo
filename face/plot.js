@@ -465,6 +465,22 @@ async function tryPlot() {
         sleep_count++;
         if (sleep_count > 20) {
             console.log("Could not find data file after 20 iterations!");
+            var temp = svg.append("text")
+                .attr("class", "error")
+                .attr("id", "loading_plot_data")
+                .attr("transform",
+                    "translate(" + (width/2) + ", " + (height/2) + ")")
+                .style("text-anchor", "middle")
+                .style("font-size", font_size*2);
+
+            temp.append("tspan")
+                .attr("x", 0)
+                .attr("dy", "-40px")
+                .text("Error loading plot data!");
+            temp.append("tspan")
+                .attr("x", 0)
+                .attr("dy", "40px")
+                .text("Try re-running?");
             break;
         }
         await sleep(100);
