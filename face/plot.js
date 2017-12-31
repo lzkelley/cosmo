@@ -26,17 +26,12 @@ width = parseFloat(width.replace("px", ""));
 height = parseFloat(height.replace("px", ""));
 font_size = parseFloat(font_size.replace("px", ""));
 
+var A_TICKS = [0.99, 0.9, 0.8, 0.5, 0.2, 0.05, 0.01];
+
 var margin = {top: 40, right: 84, bottom: 50, left: 84};
 // var margin = {top: 40, right: 84, bottom: 50, left: -84};
 margin.width = margin.left + margin.right;
 margin.height = margin.top + margin.bottom;
-
-// svg.append("rect")
-//     .attr("x", 0)
-//     .attr("y", 0)
-//     .attr("width", width)
-//     .attr("height", height)
-//     .attr("fill", "rgba(215, 170, 246, 0.1)");
 
 var Z_RANGE = [0.01, 100.0];   // Range of redshift values
 var D_RANGE = [1.0e+1, 1.0e5];  // Range of distance [Mpc] values
@@ -57,11 +52,9 @@ function format(num) {
     return num.toExponential(2);
 }
 
-// == Plot / Figure Stuff == //
+// == Plot / Figure Initialization == //
 
-function initPlots() {
-
-    var xAxisTranslate = height - margin.bottom;
+function initPlot() {
 
     // Construct mask/overlay to monitor mouse over plot; and clip lines outside plot areas
     var mask = defs.append("clipPath")
@@ -78,7 +71,7 @@ function initPlots() {
     //    ``svg.select("#plots").append("path") ....``
     svg.append("g")
         .attr("id", "plots")
-        .attr("clip-path", "url(#mask)");
+        // .attr("clip-path", "url(#mask)");
 
     // == Scales and Axes == //
     axis_z = d3.axisBottom();
@@ -97,52 +90,19 @@ function initPlots() {
     scale_t = scale_t.domain(T_RANGE)
         .range([height - margin.height, 0]);
 
-    // add z gridlines
-    svg.select("#plots").append("g")
-        .attr("class", "grid")
-        .attr("id", "z")
-        .attr("transform", "translate(" + margin.left + "," + (height - margin.bottom) + ")")
-        .call(d3.axisBottom(scale_z)
-            .ticks(NZ_GRID)
-            .tickSize(-height)
-            .tickFormat("")
-        );
-
-    // add d gridlines
-    svg.select("#plots").append("g")
-        .attr("class", "grid")
-        .attr("id", "d")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .call(d3.axisLeft(scale_d)
-            .ticks(ND_GRID)
-            .tickSize(-width)
-            .tickFormat("")
-        );
-
-    // add t gridlines
-    svg.select("#plots").append("g")
-        .attr("class", "grid")
-        .attr("id", "t")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .call(d3.axisRight(scale_t)
-            .ticks(NT_GRID)
-            .tickSize(width)
-            .tickFormat("")
-        );
-
     axis_z.scale(scale_z);
     axis_a.scale(scale_z);
     axis_d.scale(scale_d);
     axis_t.scale(scale_t);
 
-    // Choose scale-factor tick locations
-    var a_ticks = [0.99, 0.95, 0.9, 0.8, 0.5, 0.2];
     // Convert to redshift values
     var a_ticks_z = [];
-    for (var ii = 0, len = a_ticks.length; ii < len; ii++) {
-        a_ticks_z.push((1.0/a_ticks[ii]) - 1.0);
+    for (var ii = 0, len = A_TICKS.length; ii < len; ii++) {
+        a_ticks_z.push((1.0/A_TICKS[ii]) - 1.0);
     }
     // Set tick locations in redshift-scale, but label according to scale-factor
+    console.log(A_TICKS);
+    console.log(a_ticks_z);
     axis_a.tickValues(a_ticks_z)
         .tickFormat(function(d) {
             return sprintf('%.2f', 1.0/(d + 1.0));
@@ -166,7 +126,7 @@ function initPlots() {
     var _ax_z = svg.append("g")
         .attr("class", "axis")
         .attr("id", "axis_z")
-        .attr("transform", "translate(" + margin.left + "," + xAxisTranslate + ")")
+        .attr("transform", "translate(" + margin.left + "," + (height - margin.bottom) + ")")
         .call(axis_z);
 
     // a axis
@@ -176,17 +136,94 @@ function initPlots() {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(axis_a);
 
+    initGridLines();
+
     axisLabelTens(_ax_z);
     axisLabelTens(_ax_t);
     axisLabelTens(_ax_d);
 
     //  ====  Add Axis Labels  ====  //
+    labelAxes();
 
+    //  ====    Add Mouse-Interaction with Plot    ====  //
+    initCrossHairs();
+
+}
+
+function initCrossHairs() {
+    focus = svg.select("#plots").append('g')
+
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_z');
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_dl');
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_dc');
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_tl');
+    focus.append('line')
+        .attr('class', 'focusLine')
+        .attr('id', 'focusLine_ta');
+
+    svg.append('rect')
+        .attr('class', 'overlay')
+        .attr('x', margin.left)
+        .attr('y', margin.top)
+        .attr('width', width - margin.width)
+        .attr('height', height - margin.height)
+        .on('click', function() {
+            var mouse = d3.mouse(this);
+            var zz = scale_z.invert(mouse[0] - margin.left);
+            calcAndUpdate(zz);
+        });
+}
+
+function initGridLines() {
+    // add z gridlines
+    svg.select("#plots").append("g")
+        .attr("class", "grid")
+        .attr("id", "z")
+        .attr("transform", "translate(" + margin.left + "," + (height - margin.bottom) + ")")
+        .call(d3.axisBottom(scale_z)
+            .ticks(NZ_GRID)
+            .tickSize(-height + margin.height)
+            .tickFormat("")
+        );
+
+    // add d gridlines
+    svg.select("#plots").append("g")
+        .attr("class", "grid")
+        .attr("id", "d")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(d3.axisLeft(scale_d)
+            .ticks(ND_GRID)
+            .tickSize(-width + margin.width)
+            .tickFormat("")
+        );
+
+    // add t gridlines
+    svg.select("#plots").append("g")
+        .attr("class", "grid")
+        .attr("id", "t")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(d3.axisRight(scale_t)
+            .ticks(NT_GRID)
+            .tickSize(width - margin.width)
+            .tickFormat("")
+        );
+
+}
+
+function labelAxes() {
     // == Redshift Axis
     svg.append("text")
         .attr("id", "axis_z")
         .attr("transform",
-            "translate(" + (width/2) + ", " + (xAxisTranslate + 40) + ")")
+            "translate(" + (width/2) + ", " + (height - margin.bottom + 40) + ")")
         .style("text-anchor", "middle")
         .style("font-size", font_size*1.2)
         .text("Redshift");
@@ -260,43 +297,25 @@ function initPlots() {
     // Shift down
     temp.attr("dx", temp.node().getBBox().width/2 + 10)
         .attr("dy", temp.node().getBBox().height + 4)
+}
 
-    //  ====    Add Mouse-Interaction with Plot    ====  //
-
-    focus = svg.select("#plots").append('g')
-        // .style('display', 'none');
-
-    focus.append('line')
-        .attr('class', 'focusLine')
-        .attr('id', 'focusLine_z');
-    focus.append('line')
-        .attr('class', 'focusLine')
-        .attr('id', 'focusLine_dl');
-    focus.append('line')
-        .attr('class', 'focusLine')
-        .attr('id', 'focusLine_dc');
-    focus.append('line')
-        .attr('class', 'focusLine')
-        .attr('id', 'focusLine_tl');
-    focus.append('line')
-        .attr('class', 'focusLine')
-        .attr('id', 'focusLine_ta');
-
-    var bisectDate = d3.bisector(function(d) { return d[0]; }).left;
-
-    svg.append('rect')
-        .attr('class', 'overlay')
-        .attr('x', margin.left)
-        .attr('y', margin.top)
-        .attr('width', width - margin.width)
-        .attr('height', height - margin.height)
-        .on('click', function() {
-            var mouse = d3.mouse(this);
-            var zz = scale_z.invert(mouse[0] - margin.left);
-            // console.log("mouse = ", mouse, "zz = ", zz);
-            calcAndUpdate(zz);
+function axisLabelTens(ax) {
+    ax.selectAll(".tick text")
+        .text(null)
+        .filter(powerOfTen)
+        .text(10)
+        .append("tspan")
+        .attr("dy", "-.7em")
+        .text(function(d) {
+            return sprintf('%+.0f', Math.round(Math.log(d) / Math.LN10));
         });
 }
+
+function powerOfTen(d) {
+  return d / Math.pow(10, Math.ceil(Math.log(d) / Math.LN10 - 1e-12)) === 1;
+}
+
+// == Plot / Figure Updates == //
 
 function updateCrossHairs(retval) {
     console.log("plot.updateCrossHairs() : ", retval);
@@ -337,61 +356,6 @@ function updateCrossHairs(retval) {
         .attr('x1', 0).attr('y1', yy)
         .attr('x2', width).attr('y2', yy);
 
-}
-
-function axisLabelTens(ax) {
-    ax.selectAll(".tick text")
-        .text(null)
-        .filter(powerOfTen)
-        .text(10)
-        .append("tspan")
-        .attr("dy", "-.7em")
-        .text(function(d) {
-            return sprintf('%+.0f', Math.round(Math.log(d) / Math.LN10));
-        });
-}
-
-function powerOfTen(d) {
-  return d / Math.pow(10, Math.ceil(Math.log(d) / Math.LN10 - 1e-12)) === 1;
-}
-
-function findYatX(x, xv, yv, error) {
-    var end = xv.length,
-        beg = 0,
-        count_max = 50,
-        count = 0,
-        mid, xl, xh;
-
-    console.log("x = ", x);
-
-    do  {
-        // get the middle point
-        mid = Math.floor((end + beg) / 2);
-        xl = xv[mid];
-        xh = xv[mid+1];
-
-        console.log(beg, mid, end, " :: ", xl, x);
-
-        if (xl < x) {
-            beg = mid;
-        } else if (xh > x) {
-            end = mid + 1;
-        }
-
-        // Increase iteration
-        if (count_max < ++ count)
-            break;
-    } while (end > beg + 1);
-
-    xl = xv[beg], xh = xv[end];
-    var yl = yv[beg], yh = yv[end];
-    console.log("x = ", xl, xh);
-    console.log("y = ", yl, yh);
-    var interp = yl + (x - xl) * (yh - yl) / (xh - xl);
-    console.log("interp = ", interp);
-    return interp;
-
-    return mid;
 }
 
 function plotLines() {
@@ -477,7 +441,8 @@ function plotLines() {
     });
 }
 
-/*    ========    RUN SIMULATION    =========    */
 
-initPlots();
+/*    ========    RUN   =========    */
+
+initPlot();
 plotLines();
