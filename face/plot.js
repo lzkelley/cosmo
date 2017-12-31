@@ -6,7 +6,9 @@
 
 /*    ========    SETTINGS    =========    */
 var sprintf = require('sprintf-js').sprintf
+var fs = require('fs')
 
+var DATA_FILE_PATH = "data/cosmo_grid.csv";
 var svg = d3.select('#simContainer');
 var data, data_z, data_dl, data_len;
 var path_dc, path_dl, path_tl, path_ta;
@@ -71,7 +73,7 @@ function initPlot() {
     //    ``svg.select("#plots").append("path") ....``
     svg.append("g")
         .attr("id", "plots")
-        // .attr("clip-path", "url(#mask)");
+        .attr("clip-path", "url(#mask)");
 
     // == Scales and Axes == //
     axis_z = d3.axisBottom();
@@ -136,11 +138,12 @@ function initPlot() {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(axis_a);
 
-    initGridLines();
-
     axisLabelTens(_ax_z);
     axisLabelTens(_ax_t);
     axisLabelTens(_ax_d);
+
+    //  ==  Add Grid Lines  ==  //
+    initGridLines();
 
     //  ====  Add Axis Labels  ====  //
     labelAxes();
@@ -358,8 +361,8 @@ function updateCrossHairs(retval) {
 
 }
 
-function plotLines() {
-    d3.csv("data/cosmo_grid.csv", function(error, _data) {
+function loadAndPlotCosmoLines() {
+    d3.csv(DATA_FILE_PATH, function(error, _data) {
         if (error) throw error;
         data = _data;
         data_z = [];
@@ -444,5 +447,38 @@ function plotLines() {
 
 /*    ========    RUN   =========    */
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+var sleep_count = 0;
+var retval = false;
+
+function plot() {
+    loadAndPlotCosmoLines();
+    retval = true;
+}
+
+async function tryPlot() {
+    while (retval === false) {
+        console.log("File '", DATA_FILE_PATH, "' does not exist...");
+        sleep_count++;
+        if (sleep_count > 20) {
+            console.log("Could not find data file after 20 iterations!");
+            break;
+        }
+        await sleep(100);
+        fs.exists(DATA_FILE_PATH, (exists) => {
+            if (exists && retval == false) {
+                plot();
+            } else {
+                console.log("Waiting for data file...");
+            }
+        });
+
+    }
+}
+
 initPlot();
-plotLines();
+tryPlot();
+// loadAndPlotCosmoLines();
