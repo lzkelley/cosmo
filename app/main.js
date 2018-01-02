@@ -2,45 +2,42 @@ const {app, BrowserWindow, shell} = require('electron')
 const path = require('path')
 const url = require('url')
 
-/* ==  Create Python Process  == */
+var win;
 
-let pyProc = null;
-let pyPort = null;
-let pyPath = null;
+var pyProc = null;
+var pyPort = null;
+var pyPath = null;
 
-const selectPort = () => {
-    pyPort = 4242;
-    return pyPort;
-}
-
-const pathPyAPI = () => {
-    pyPath = path.join(__dirname, 'face', 'pyapi.py');
-    return pyPath;
-}
-
-const createPyProc = () => {
-    let port = '' + selectPort();
-    let pyPath = '' + pathPyAPI();
-    console.log("pyPath: '", pyPath, "'", "on port", port)
-    pyProc = require('child_process').spawn('python', [pyPath, port]);
-    if (pyProc != null) {
-        console.log('child process success');
+function initPython() {
+    const selectPort = () => {
+        pyPort = 4242;
+        return pyPort;
     }
+
+    const pathPyAPI = () => {
+        pyPath = path.join(__dirname, 'face', 'pyapi.py');
+        return pyPath;
+    }
+
+    const createPyProc = () => {
+        let port = '' + selectPort();
+        let pyPath = '' + pathPyAPI();
+        console.log("pyPath: '", pyPath, "'", "on port", port)
+        pyProc = require('child_process').spawn('python', [pyPath, port]);
+        if (pyProc != null) {
+            console.log('child process success');
+        }
+    }
+
+    const exitPyProc = () => {
+        pyProc.kill();
+        pyProc = null;
+        pyPort = null;
+    }
+
+    app.on('ready', createPyProc);
+    app.on('will-quit', exitPyProc);
 }
-
-const exitPyProc = () => {
-    pyProc.kill();
-    pyProc = null;
-    pyPort = null;
-}
-
-app.on('ready', createPyProc);
-app.on('will-quit', exitPyProc);
-
-
-/* ==  Create App Window  == */
-
-let win
 
 function createWindow () {
     // Create the browser window.
@@ -86,9 +83,17 @@ function createWindow () {
     });
 }
 
-app.on('ready', createWindow);
+function initApp() {
+    app.on('ready', createWindow);
 
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-    app.quit()
-})
+    // Quit when all windows are closed.
+    app.on('window-all-closed', () => {
+        app.quit()
+    });
+}
+
+/* ==  Create Python Process  == */
+initPython();
+
+/* ==  Create App Window  == */
+initApp();

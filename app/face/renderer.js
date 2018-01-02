@@ -1,18 +1,19 @@
 
 /* == Initialize Python Interface == */
 
-const zerorpc = require("zerorpc")
-let client = new zerorpc.Client(timeout=1000)
+const zerorpc = require("zerorpc");
+let client = new zerorpc.Client(timeout=1000);
 
-client.connect("tcp://127.0.0.1:4242")
+client.connect("tcp://127.0.0.1:4242");
 
 client.invoke("echo", "server ready", (error, res) => {
-  if(error || res !== 'server ready') {
-    console.error(error)
-  } else {
-    console.log("server is ready")
-  }
-})
+    if(error || res !== 'server ready') {
+      console.error("Failed to connect to python process in `renderer.js`!");
+      console.error(error);
+    } else {
+      console.log("server is ready");
+    }
+});
 
 // Load DOM objects from document
 let redshift = document.querySelector('#redshiftInput');
