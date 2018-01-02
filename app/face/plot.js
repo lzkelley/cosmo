@@ -5,15 +5,20 @@
  */
 
 /*    ========    SETTINGS    =========    */
-var sprintf = require('sprintf-js').sprintf
-var fs = require('fs')
+const sprintf = require('sprintf-js').sprintf
+const fs = require('fs')
 
-var DATA_FILE_PATH = "data/cosmo_grid.csv";
 var svg = d3.select('#simContainer');
+
 var data, data_z, data_dl, data_len;
 var path_dc, path_dl, path_tl, path_ta;
 var line_dc, line_dl, line_tl, line_ta;
 var focus;
+
+var sleep_count = 0;
+var retval = false;
+var DATA_FILE_PATH;
+const SLEEP_COUNT_MAX = 20;
 
 var style = getComputedStyle(document.body);
 var color_dc = style.getPropertyValue('--color-dc');
@@ -31,17 +36,18 @@ font_size = parseFloat(font_size.replace("px", ""));
 var A_TICKS = [0.99, 0.9, 0.8, 0.5, 0.2, 0.05, 0.01];
 
 var margin = {top: 40, right: 84, bottom: 50, left: 84};
-// var margin = {top: 40, right: 84, bottom: 50, left: -84};
 margin.width = margin.left + margin.right;
 margin.height = margin.top + margin.bottom;
 
-var Z_RANGE = [0.01, 100.0];   // Range of redshift values
-var D_RANGE = [1.0e+1, 1.0e5];  // Range of distance [Mpc] values
-var T_RANGE = [1.0e-1, 20.0];  // Range of time [Gyr] values
+const Z_RANGE = [0.01, 100.0];   // Range of redshift values
+const D_RANGE = [1.0e+1, 1.0e5];  // Range of distance [Mpc] values
+const T_RANGE = [1.0e-1, 20.0];  // Range of time [Gyr] values
 
-var NZ_GRID = 3;
-var ND_GRID = 3;
-var NT_GRID = 2;
+const NZ_GRID = 3;
+const ND_GRID = 3;
+const NT_GRID = 2;
+
+const APP_DIR = __dirname;
 
 /*    ========    INITIALIZE OBJECTS    =========    */
 
@@ -435,26 +441,20 @@ function loadAndPlotCosmoLines() {
     });
 }
 
-
-/*    ========    RUN   =========    */
+// == Logistical Functions == //
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-var sleep_count = 0;
-var retval = false;
 
 function plot() {
     loadAndPlotCosmoLines();
     retval = true;
 }
 
-async function tryPlot() {
-    while (retval === false) {
-        console.log("File '", DATA_FILE_PATH, "' does not exist...");
-        sleep_count++;
-        if (sleep_count > 20) {
+async function tryPlot(dataFileName) {
+    do {
+        if (sleep_count > SLEEP_COUNT_MAX) {
             console.log("Could not find data file after 20 iterations!");
             var temp = svg.append("text")
                 .attr("class", "error")
@@ -474,17 +474,39 @@ async function tryPlot() {
                 .text("Try re-running?");
             break;
         }
-        await sleep(100);
-        fs.exists(DATA_FILE_PATH, (exists) => {
+        fs.exists(dataFileName, (exists) => {
             if (exists && retval == false) {
                 plot();
             } else {
-                console.log("Waiting for data file...");
+                console.log("File '", dataFileName, "' does not exist...");
+                sleep_count++;
             }
         });
-
-    }
+        if (retval == false) {
+            await sleep(100);
+        }
+    } while (retval === false);
 }
 
+function loadDataFilePath() {
+    var data = fs.readFileSync(APP_DIR + '/settings.txt').toString().split("\n");
+    var sets = {};
+    for (var ii = 0; ii < data.length; ii++) {
+        let clean = data[ii].trim();
+        if (clean.length > 0) {
+            clean = clean.split("=");
+            if (clean.length === 2) {
+                sets[clean[0].trim()] = clean[1].trim();
+            }
+        }
+    }
+    return APP_DIR + "/" + sets["FNAME_COSMO_DATA"];
+}
+
+/*    ========    RUN   =========    */
+
+DATA_FILE_PATH = loadDataFilePath();
+console.log("DATA_FILE_PATH = ", DATA_FILE_PATH);
+
 initPlot();
-tryPlot();
+tryPlot(DATA_FILE_PATH);

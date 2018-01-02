@@ -1,6 +1,8 @@
-const {app, BrowserWindow, shell} = require('electron')
-const path = require('path')
-const url = require('url')
+const {app, BrowserWindow, shell} = require('electron');
+const path = require('path');
+const url = require('url');
+
+// exit();
 
 var win;
 
@@ -93,7 +95,9 @@ function initApp() {
 }
 
 /* ==  Create Python Process  == */
+console.log("Calling `initPython()`");
 initPython();
 
 /* ==  Create App Window  == */
+console.log("Calling `initApp()`");
 initApp();
