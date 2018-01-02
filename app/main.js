@@ -1,8 +1,6 @@
-const {app, BrowserWindow, shell} = require('electron');
+const {app, BrowserWindow, shell, dialog} = require('electron');
 const path = require('path');
 const url = require('url');
-
-// exit();
 
 var win;
 
@@ -93,6 +91,9 @@ function initApp() {
         app.quit()
     });
 }
+
+// dialog.showErrorBox("hello", "content");
+// exit(2);
 
 /* ==  Create Python Process  == */
 console.log("Calling `initPython()`");
