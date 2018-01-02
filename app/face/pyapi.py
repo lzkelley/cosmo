@@ -50,7 +50,7 @@ def log(msg, stdout=False):
     str_out = "{} :: {} :: {}".format(dt, _MY_NAME, msg)
     if stdout:
         print(str_out)
-    with open(FNAME_LOG, 'a') as out:
+    with open(PATH_LOG, 'a') as out:
         out.write(str_out + "\n")
         out.flush()
     return
@@ -77,13 +77,13 @@ log("Started and initialized.", True)
 
 log("Loading cosmology instance")
 cosmo = cosmopy.get_cosmology()
-log("... cosmology instance loaded")
+log("\tcosmology instance loaded")
 
 
 def main():
     log("pyapi.main()")
     save_cosmo_data()
-    sys.exit(232)
+    # sys.exit(232)
 
     addr = 'tcp://127.0.0.1:' + str(parse_port())
     s = zerorpc.Server(CalcApi())
