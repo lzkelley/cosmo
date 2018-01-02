@@ -12,7 +12,7 @@ Current
 [0.2.0] - 2017/12/28
 --------------------
     -   Cosmological values now include: redshift, scale-factor, distance (luminosity & comoving), time (universe-age & lookback).
-        -   This uses the `cosmocalc` python package as a backend.
+        -   This uses the `cosmopy` python package as a backend.
     -   Each parameter can be entered to retrieve all of the other parameters.
     -   Plot of cosmological parameters vs. redshift has been added.
 

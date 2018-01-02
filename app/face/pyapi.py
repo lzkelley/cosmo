@@ -1,4 +1,4 @@
-"""API from `cosmo` electron application to `cosmocalc` python package.
+"""API from `cosmo` electron application to `cosmopy` python package.
 """
 import datetime
 import os
@@ -6,12 +6,12 @@ import os
 import numpy as np
 import zerorpc
 
-import cosmocalc
+import cosmopy
 
 out = open('pylog.txt', 'w')
 out.write('api.py - {}\n'.format(datetime.datetime.now()))
 
-cosmo = cosmocalc.get_cosmology()
+cosmo = cosmopy.get_cosmology()
 
 # Save the grid of cosmological values to a local file
 GRID_FNAME = "./data/cosmo_grid.csv"
@@ -35,7 +35,7 @@ class CalcApi:
         try:
             name, _val = args
             _log("name = '{}', val = '{}'".format(name, _val))
-            rv = cosmocalc.api(name, _val, cosmo=cosmo)
+            rv = cosmopy.api(name, _val, cosmo=cosmo)
             msg += 'succeeded.'
         except Exception as e:
             _log("\nException: '{}'\n".format(str(e)))
