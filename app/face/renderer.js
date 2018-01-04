@@ -39,8 +39,7 @@ function valueInput(e) {
         console.log(srcName, srcId, value);
         console.log("client = ", client);
 
-        let retval = calcAndUpdate(value, srcName);
-        updateCrossHairs(retval);
+        calcAndUpdate(value, srcName);
         return false;
     }
 }
