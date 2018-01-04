@@ -2,6 +2,8 @@ const {app, BrowserWindow, shell, dialog} = require('electron');
 const path = require('path');
 const url = require('url');
 
+require('electron-debug')({showDevTools: true, enabled: true});
+
 var win;
 
 var pyProc = null;
