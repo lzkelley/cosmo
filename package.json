@@ -7,11 +7,9 @@
   "author": "Luke Zoltan Kelley <lkelley@cfa.harvard.edu>",
   "description": "A simple cosmological calculator application using Electron.",
   "scripts": {
-    "_start": "electron .",
-    "_postinstall": "npm rebuild zeromq --runtime=electron --target=1.7.2",
-    "postinstall": "electron-builder install-app-deps",
-    "__start": "npm install && electron ./app",
-    "start": "yarn install && electron ./app",
+    "__postinstall": "npm rebuild zeromq --runtime=electron --target=1.7.2",
+    "_postinstall": "electron-builder install-app-deps",
+    "start": "npm install && electron ./app",
     "pack": "build --dir",
     "dist": "build"
   },
@@ -36,18 +34,17 @@
         "AppImage",
         "deb"
       ]
-    },
-    "win": {
-      "target": "squirrel",
-      "icon": "build/icon.ico"
     }
   },
-  "dependencies": {
-    "sprintf-js": "^1.1.1",
-    "zerorpc": "git+https://github.com/fyears/zerorpc-node.git"
-  },
   "devDependencies": {
-    "electron": "1.7.6",
-    "electron-builder": "^19.50.0"
+    "electron": "^1.8.1",
+    "electron-builder": "^19.52.1",
+    "electron-rebuild": "^1.6.0"
+  },
+  "dependencies": {
+    "electron-debug": "^1.5.0",
+    "sprint-js": "^0.1.0",
+    "zerorpc": "^0.9.7",
+    "zmq": "^2.15.3"
   }
 }

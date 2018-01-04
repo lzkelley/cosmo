@@ -1,21 +1,12 @@
 {
-  "name": "cosmo",
-  "version": "0.2.0",
-  "main": "main.js",
-  "repository": "https://github.com/lzkelley/cosmo",
-  "keywords": [],
-  "author": "Luke Zoltan Kelley <lkelley@cfa.harvard.edu>",
-  "description": "A simple cosmological calculator application using Electron.",
-  "scripts": {
-    "postinstall": "electron-builder install-app-deps",
-    "start": "yarn install && electron ."
-  },
-  "dependencies": {
-    "sprintf-js": "^1.1.1",
-    "zerorpc": "git+https://github.com/fyears/zerorpc-node.git"
-  },
-  "devDependencies": {
-    "electron": "1.7.6",
-    "electron-builder": "^19.50.0"
-  }
+    "name": "cosmo",
+    "version": "0.2.0",
+    "main": "main.js",
+    "repository": "https://github.com/lzkelley/cosmo",
+    "keywords": [],
+    "author": "Luke Zoltan Kelley <lkelley@cfa.harvard.edu>",
+    "description": "A simple cosmological calculator application using Electron.",
+    "scripts": {
+        "postinstall": "electron-builder install-app-deps",
+    }
 }
