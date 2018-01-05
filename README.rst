@@ -6,11 +6,12 @@ A cosmological calculator application using Electron and python.
 Installation
 ------------
 -   (Current) Successful installation instructions:
-    -   Use an environment where python2 is the default.
+    -   Use an environment where *python2* is the default.
     -   `$ npm install`
     -   `$ npm rebuild zerorpc --runtime=electron --target=1.8.1`   # maybe not needed?
     -   `$ npm rebuild zmq --runtime=electron --target=1.8.1`       # maybe not needed?
     -   `$ ./node_modules/.bin/electron-rebuild`
+-   When packaging (i.e. with `npm run dist`), *python2* must still be the default python!
 
 
 - Run ``npm install``
