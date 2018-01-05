@@ -1,6 +1,7 @@
 const {app, BrowserWindow, shell, dialog} = require('electron');
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
 
 require('electron-debug')({showDevTools: true, enabled: true});
 
@@ -10,6 +11,7 @@ var pyProc = null;
 var pyPort = null;
 var pyPath = null;
 
+
 function initPython() {
     const selectPort = () => {
         pyPort = 4242;
@@ -17,8 +19,22 @@ function initPython() {
     }
 
     const pathPyAPI = () => {
-        pyPath = path.join(__dirname, 'face', 'pyapi.py');
-        return pyPath;
+        pyPath = path.join(__dirname, 'external', 'pyapi.py');
+        console.log("Trying to find python at ", pyPath);
+        if (fs.existsSync(pyPath)) {
+            console.log("\tLocated python!");
+            return pyPath;
+        }
+
+        pyPath = path.join(__dirname, '..', '..', 'external', 'pyapi.py');
+        console.log("Trying to find python at ", pyPath);
+        if (fs.existsSync(pyPath)) {
+            console.log("\tLocated python!");
+            return pyPath;
+        }
+
+        console.log("Failed to find python!");
+        throw "Failed to find python!";
     }
 
     const createPyProc = () => {
@@ -26,9 +42,11 @@ function initPython() {
         let pyPath = '' + pathPyAPI();
         console.log("pyPath: '", pyPath, "'", "on port", port)
         pyProc = require('child_process').spawn('python', [pyPath, port]);
+        // pyProc = require('child_process').spawnSync('python', [pyPath, port]);
         if (pyProc != null) {
             console.log('child process success');
         }
+
     }
 
     const exitPyProc = () => {

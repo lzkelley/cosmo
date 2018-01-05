@@ -16,6 +16,16 @@
   },
   "build": {
     "appId": "cosmo",
+    "extraResources": [
+        {
+          "from": "app/external/pyapi.py",
+          "to": "external/pyapi.py"
+        },
+        {
+          "from": "app/external/settings.txt",
+          "to": "external/settings.txt"
+        }
+    ],
     "dmg": {
       "contents": [
         {

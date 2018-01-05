@@ -7,6 +7,7 @@
 /*    ========    SETTINGS    =========    */
 const sprintf = require('sprintf-js').sprintf
 const fs = require('fs')
+const path = require('path');
 
 var svg = d3.select('#simContainer');
 
@@ -324,6 +325,10 @@ function powerOfTen(d) {
 
 // == Plot / Figure Updates == //
 
+function parseRetVals(rv) {
+    return String.fromCharCode.apply(null, rv);
+}
+
 function updateCrossHairs(retval) {
     console.log("plot.updateCrossHairs() : ", retval);
     var temp = parseFloat(retval['z']);
@@ -332,25 +337,25 @@ function updateCrossHairs(retval) {
         .attr('x1', xx).attr('y1', 0)
         .attr('x2', xx).attr('y2', height);
 
-    temp = parseFloat(retval['dl'].replace(" Mpc", ""));
+    temp = parseFloat(parseRetVals(retval['dl']).replace(" Mpc", ""));
     yy = scale_d(temp) + margin.top;
     focus.select('#focusLine_dl')
         .attr('x1', 0).attr('y1', yy)
         .attr('x2', width).attr('y2', yy);
 
-    temp = parseFloat(retval['dc'].replace(" Mpc", ""));
+    temp = parseFloat(parseRetVals(retval['dc']).replace(" Mpc", ""));
     yy = scale_d(temp) + margin.top;
     focus.select('#focusLine_dc')
         .attr('x1', 0).attr('y1', yy)
         .attr('x2', width).attr('y2', yy);
 
-    temp = parseFloat(retval['tl'].replace(" Gyr", ""));
+    temp = parseFloat(parseRetVals(retval['tl']).replace(" Gyr", ""));
     yy = scale_t(temp) + margin.top;
     focus.select('#focusLine_tl')
         .attr('x1', 0).attr('y1', yy)
         .attr('x2', width).attr('y2', yy);
 
-    temp = parseFloat(retval['ta'].replace(" Gyr", ""));
+    temp = parseFloat(parseRetVals(retval['ta']).replace(" Gyr", ""));
     yy = scale_t(temp) + margin.top;
     focus.select('#focusLine_ta')
         .attr('x1', 0).attr('y1', yy)
@@ -489,7 +494,27 @@ async function tryPlot(dataFileName) {
 }
 
 function loadDataFilePath() {
-    var data = fs.readFileSync(APP_DIR + '/settings.txt').toString().split("\n");
+
+    var setsPath = "";
+    var testPath = "";
+
+    testPath = path.join(APP_DIR, 'external', 'settings.txt');
+    console.log("Searching for settings at ", testPath);
+    if (fs.existsSync(testPath)) {
+        setsPath = testPath;
+        console.log("Found settings!");
+    } else {
+        testPath = path.join(APP_DIR, '..', '..', 'external', 'settings.txt');
+        console.log("Searching for settings at ", testPath);
+        if (fs.existsSync(testPath)) {
+            setsPath = testPath;
+            console.log("Found settings!");
+        } else {
+            throw "Could not find settings file!";
+        }
+    }
+
+    var data = fs.readFileSync(setsPath).toString().split("\n");
     var sets = {};
     for (var ii = 0; ii < data.length; ii++) {
         let clean = data[ii].trim();
