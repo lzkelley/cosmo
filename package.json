@@ -8,8 +8,9 @@
   "description": "A simple cosmological calculator application using Electron.",
   "scripts": {
     "__postinstall": "npm rebuild zeromq --runtime=electron --target=1.7.2",
-    "_postinstall": "electron-builder install-app-deps",
-    "start": "npm install && electron ./app",
+    "postinstall": "electron-builder install-app-deps",
+    "_start": "npm install && electron ./app",
+    "start": "electron .",
     "pack": "build --dir",
     "dist": "build"
   },
@@ -43,7 +44,7 @@
   },
   "dependencies": {
     "electron-debug": "^1.5.0",
-    "sprint-js": "^0.1.0",
+    "sprintf-js": "^1.1.1",
     "zerorpc": "^0.9.7",
     "zmq": "^2.15.3"
   }
