@@ -9,8 +9,15 @@ import zerorpc
 
 import cosmopy
 
+# This is the parent directory of this script.
+#    When running in development environment (i.e. source files directly), then parent dir
+#        e.g. 'cosmo/app'
+#    When running from package, then location of 'extraResources'
+#        e.g. 'cosmo.app/Contents/Resources/external/'
 _DIR_APP = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
-_PATH_SETS = os.path.join(_DIR_APP, "settings.txt")
+
+_DIR_USER = os.path.abspath(os.path.expanduser('~'))
+_PATH_SETS = os.path.join(_DIR_APP, "external", "settings.txt")
 _MY_NAME = "pyapi.py"
 
 _SETS_ILLEGAL_CHARS = ["\'", "\""]
@@ -60,7 +67,8 @@ try:
     sets = load_settings()
     FNAME_LOG = sets["FNAME_LOG"]
     FNAME_DATA = sets["FNAME_COSMO_DATA"]
-    PATH_LOG = os.path.join(_DIR_APP, FNAME_LOG)
+    # PATH_LOG = os.path.join(_DIR_APP, FNAME_LOG)
+    PATH_LOG = os.path.join(_DIR_USER, FNAME_LOG)
     PATH_DATA = os.path.join(_DIR_APP, FNAME_DATA)
     _data_dir = os.path.dirname(PATH_DATA)
     if not os.path.exists(_data_dir):
@@ -114,7 +122,7 @@ def parse_port():
 class CalcApi:
 
     def __init__(self):
-        log("CalcApi()")
+        log("CalcApi()", stdout=True)
 
     def calc(self, args):
         """based on the input text, return the int result"""
@@ -127,6 +135,7 @@ class CalcApi:
             name, _val = args
             log("name = '{}', val = '{}'".format(name, _val))
             rv = cosmopy.api(name, _val, cosmo=cosmo)
+            log("rv = {} ({}) : d = {} ({})".format(rv, type(rv), rv['dl'], type(rv['dl'])))
             msg += 'succeeded.'
         except Exception as e:
             log("\nException: '{}'\n".format(str(e)))

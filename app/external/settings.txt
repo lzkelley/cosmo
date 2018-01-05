@@ -1,0 +1,2 @@
+FNAME_LOG = cosmo_pyapi.log
+FNAME_COSMO_DATA = data/cosmo_grid.csv
