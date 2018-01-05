@@ -17,14 +17,14 @@
   "build": {
     "appId": "cosmo",
     "extraResources": [
-        {
-          "from": "app/external/pyapi.py",
-          "to": "external/pyapi.py"
-        },
-        {
-          "from": "app/external/settings.txt",
-          "to": "external/settings.txt"
-        }
+      {
+        "from": "app/external/pyapi.py",
+        "to": "external/pyapi.py"
+      },
+      {
+        "from": "app/external/settings.txt",
+        "to": "external/settings.txt"
+      }
     ],
     "dmg": {
       "contents": [
@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "electron-debug": "^1.5.0",
+    "fix-path": "^2.1.0",
     "sprintf-js": "^1.1.1",
     "zerorpc": "^0.9.7",
     "zmq": "^2.15.3"

@@ -12,6 +12,12 @@ var pyPort = null;
 var pyPath = null;
 
 
+const fixPath = require('fix-path');
+console.log("path before = ", process.env.PATH);
+fixPath();
+console.log("path after = ", process.env.PATH);
+
+
 function initPython() {
     const selectPort = () => {
         pyPort = 4242;
