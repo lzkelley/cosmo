@@ -6,7 +6,14 @@
     "keywords": [],
     "author": "Luke Zoltan Kelley <lkelley@cfa.harvard.edu>",
     "description": "A simple cosmological calculator application using Electron.",
+    "start": "npm install && electron ./app",
     "scripts": {
-        "postinstall": "electron-builder install-app-deps",
+        "start": "npm install && electron ./app"
+    },
+    "dependencies": {
+        "electron-debug": "^1.5.0",
+        "sprintf-js": "^1.1.1",
+        "zerorpc": "^0.9.7",
+        "zmq": "^2.15.3"
     }
 }
