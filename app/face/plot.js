@@ -326,7 +326,15 @@ function powerOfTen(d) {
 // == Plot / Figure Updates == //
 
 function parseRetVals(rv) {
-    return String.fromCharCode.apply(null, rv);
+    try {
+        return String.fromCharCode.apply(null, rv);
+    } catch (ex) {
+        // console.log("Error on rv = ", rv);
+        // console.error('Error in `plot.parseRetVals():`', ex.message);
+        console.log("ERROR in `plot.parseRetVals():`", ex.message);
+        return rv;
+    }
+    return rv;
 }
 
 function updateCrossHairs(retval) {
