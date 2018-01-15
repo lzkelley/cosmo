@@ -3,7 +3,8 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 
-require('electron-debug')({showDevTools: true, enabled: true});
+// require('electron-debug')({showDevTools: true, enabled: true});
+require('electron-debug')({enabled: true});
 
 var win;
 
